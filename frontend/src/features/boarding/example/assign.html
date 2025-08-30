@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Modal</title>
+
+    <!-- Material UI CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-roboto/0.10.2/font-roboto.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/4.0.0/iconfont/material-icons.min.css">
+
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Material UI -->
+    <script src="https://unpkg.com/@mui/material@5.15.15/umd/material-ui.development.js"></script>
+
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        #root {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .price-breakdown {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+        const {
+            Dialog,
+            DialogTitle,
+            DialogContent,
+            DialogActions,
+            Button,
+            TextField,
+            Select,
+            MenuItem,
+            FormControl,
+            InputLabel,
+            Typography,
+            Box,
+            Grid,
+            Card,
+            CardContent,
+            ThemeProvider,
+            createTheme
+        } = MaterialUI;
+
+        // Create theme
+        const theme = createTheme({
+            palette: {
+                primary: {
+                    main: '#1976d2',
+                },
+                secondary: {
+                    main: '#dc004e',
+                },
+            },
+        });
+
+        // Sample data
+        const sampleUsers = [
+            { id: 1, name: 'জন ডো', email: 'john@example.com' },
+            { id: 2, name: 'জেন স্মিথ', email: 'jane@example.com' },
+            { id: 3, name: 'মাহমুদ হাসান', email: 'mahmud@example.com' },
+            { id: 4, name: 'ফাতিমা খান', email: 'fatima@example.com' }
+        ];
+
+        const packageTypes = [
+            { id: 1, name: 'সাধারণ প্যাকেজ' },
+            { id: 2, name: 'প্রিমিয়াম প্যাকেজ' },
+            { id: 3, name: 'ডিলাক্স প্যাকেজ' },
+            { id: 4, name: 'স্পেশাল প্যাকেজ' }
+        ];
+
+        const packageIds = [
+            { id: 'PKG001', packagetypeid: "packagetypeid", name: 'ছাত্র সাধারণ প্যাকেজ' },
+            { id: 'PKG002', packagetypeid: "packagetypeid", name: 'ছাত্র প্রিমিয়াম প্যাকেজ' },
+            { id: 'PKG003', packagetypeid: "packagetypeid", name: 'টিচার প্যাকেজ' },
+            { id: 'PKG004', packagetypeid: "packagetypeid", name: 'স্ট্যাফ প্যাকেজ' }
+        ];
+
+        const meals = [
+            { id: 1, name: 'Student Complete Day Package', price: 250 },
+            { id: 2, name: 'Premium Teacher Full Day Package', price: 350 },
+            // { id: 3, name: 'ভেজিটেবল থালি', price: 180 },
+            // { id: 4, name: 'ফিশ ফ্রাই', price: 220 },
+            // { id: 5, name: 'বিফ রোস্ট', price: 400 },
+            // { id: 6, name: 'চিকেন কোরমা', price: 280 }
+        ];
+
+        function AssignModal() {
+            const [open, setOpen] = useState(false);
+            const [formData, setFormData] = useState({
+                assignUser: 1,
+                packageType: '',
+                packageId: '',
+                meal: '',
+                discount: 0,
+                price: 0
+            });
+
+            const selectedMeal = meals.find(meal => meal.id === formData.meal);
+            const originalPrice = selectedMeal ? selectedMeal.price : 0;
+            const discountAmount = (originalPrice * formData.discount) / 100;
+            const finalPrice = originalPrice - discountAmount;
+
+            // const handleInputChange = (field, value) => {
+            //     const newFormData = { ...formData, [field]: value };
+
+            //     if (field === 'meal') {
+            //         const meal = meals.find(m => m.id === value);
+            //         const mealPrice = meal ? meal.price : 0;
+            //         const discountAmt = (mealPrice * formData.discount) / 100;
+            //         newFormData.price = mealPrice - discountAmt;
+            //     } else if (field === 'discount') {
+            //         const discountAmt = (originalPrice * value) / 100;
+            //         newFormData.price = originalPrice - discountAmt;
+            //     }
+
+            //     setFormData(newFormData);
+            // };
+
+            const handleInputChange = (field, value) => {
+                // Assign User, Package Type, Package ID, Meal ধারাবাহিক হোক আগের মতোই
+                if (field === 'meal') {
+                    const meal = meals.find(m => m.id === Number(value));
+                    const mealPrice = meal ? meal.price : 0;
+                    setFormData({
+                        ...formData,
+                        meal: Number(value),
+                        price: mealPrice - (mealPrice * formData.discount) / 100
+                    });
+                }
+                else if (field === 'discount') {
+                    // টাইপ করার সময় ফাঁকা মান আলাউ করুন
+                    if (value === '') {
+                        setFormData({
+                            ...formData,
+                            discount: '',
+                            price: selectedMeal ? selectedMeal.price : 0
+                        });
+                        return;
+                    }
+                    // সংখ্যায় পরিবর্তন করে validate করুন
+                    const num = Math.min(100, Math.max(0, parseFloat(value)));
+                    const orig = selectedMeal ? selectedMeal.price : 0;
+                    const discountAmt = (orig * num) / 100;
+                    setFormData({
+                        ...formData,
+                        discount: num,
+                        price: orig - discountAmt
+                    });
+                }
+                else {
+                    setFormData({
+                        ...formData,
+                        [field]: value
+                    });
+                }
+            };
+
+            const handleSubmit = () => {
+                console.log('Form Data:', formData);
+                alert('সফলভাবে এসাইন হয়েছে!');
+                handleClose();
+            };
+
+            const handleClose = () => {
+                setOpen(false);
+                // Reset form
+                setFormData({
+                    assignUser: 1,
+                    packageType: '',
+                    packageId: '',
+                    meal: '',
+                    discount: 0,
+                    price: 0
+                });
+            };
+
+            const isFormValid = formData.meal && formData.packageType && formData.packageId;
+
+            return (
+                <ThemeProvider theme={theme}>
+                    <div>
+                        <Card elevation={3} style={{ marginBottom: '20px', padding: '20px' }}>
+                            <Typography variant="h4" gutterBottom align="center" color="primary">
+                                🍽️ খাবার এসাইনমেন্ট সিস্টেম
+                            </Typography>
+                            <Typography variant="body1" align="center" color="textSecondary">
+                                ইউজারদের জন্য খাবার প্যাকেজ এসাইন করুন
+                            </Typography>
+                            <Box display="flex" justifyContent="center" mt={2}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => setOpen(true)}
+                                    size="large"
+                                    startIcon={<span className="material-icons">assignment</span>}
+                                >
+                                    নতুন এসাইনমেন্ট
+                                </Button>
+                            </Box>
+                        </Card>
+
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}
+                            maxWidth="lg"
+                            fullWidth
+                            PaperProps={{
+                                elevation: 8,
+                                style: { borderRadius: '12px' }
+                            }}
+                        >
+                            <DialogTitle>
+                                <Box display="flex" alignItems="center" gap={1}>
+                                    <span className="material-icons" style={{ fontSize: '28px', color: '#1976d2' }}>
+                                        restaurant_menu
+                                    </span>
+                                    <Typography variant="h5" component="div" style={{ fontWeight: 'bold' }}>
+                                        খাবার এসাইন করুন
+                                    </Typography>
+                                </Box>
+                            </DialogTitle>
+
+                            <DialogContent dividers>
+                                <Grid container spacing={3} style={{ marginTop: '5px' }}>
+                                    {/* Assign User */}
+                                    <Grid item xs={12} md={6}>
+                                        <FormControl fullWidth disabled>
+                                            <InputLabel id="user-label">ইউজার নির্বাচন করুন</InputLabel>
+                                            <Select
+                                                labelId="user-label"
+                                                value={formData.assignUser}
+                                                onChange={(e) => handleInputChange('assignUser', e.target.value)}
+                                                label="ইউজার নির্বাচন করুন"
+                                            >
+                                                {sampleUsers.map(user => (
+                                                    <MenuItem key={user.id} value={user.id}>
+                                                        👤 {user.name} ({user.email})
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    {/* Package Type */}
+                                    <Grid item xs={12} md={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="package-type-label">প্যাকেজ টাইপ</InputLabel>
+                                            <Select
+                                                labelId="package-type-label"
+                                                value={formData.packageType}
+                                                onChange={(e) => handleInputChange('packageType', e.target.value)}
+                                                label="প্যাকেজ টাইপ"
+                                            >
+                                                {packageTypes.map(pkg => (
+                                                    <MenuItem key={pkg.id} value={pkg.id}>
+                                                        📦 {pkg.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    {/* Package ID */}
+                                    <Grid item xs={12} md={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="package-id-label">প্যাকেজ</InputLabel>
+                                            <Select
+                                                labelId="package-id-label"
+                                                value={formData.packageId}
+                                                onChange={(e) => handleInputChange('packageId', e.target.value)}
+                                                label="প্যাকেজ"
+                                            >
+                                                {packageIds.map(pkg => (
+                                                    <MenuItem key={pkg.id} value={pkg.id}>
+                                                        🏷️ {pkg.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    {/* Meal Selection */}
+                                    <Grid item xs={12} md={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="meal-label">select full Day meal</InputLabel>
+                                            <Select
+                                                labelId="meal-label"
+                                                value={formData.meal}
+                                                onChange={(e) => handleInputChange('meal', e.target.value)}
+                                                label="Select full day meal"
+                                            >
+                                                {meals.map(meal => (
+                                                    <MenuItem key={meal.id} value={meal.id}>
+                                                        🍽️ {meal.name} - ৳{meal.price}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    {/* Discount */}
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            //     fullWidth
+                                            //     label="ছাড় (%)"
+                                            //     type="number"
+                                            //     value={formData.discount}
+                                            //     onChange={(e) => handleInputChange('discount', Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                                            //     inputProps={{ min: 0, max: 100, step: 0.1 }}
+                                            //     helperText="০ থেকে ১০০ পার্সেন্ট"
+                                            // />
+                                            //<TextField
+                                            fullWidth
+                                            label="ছাড় (%)"
+                                            type="number"
+                                            value={formData.discount}
+                                            onChange={(e) => handleInputChange('discount', e.target.value)}  // <-- এখানে পরিবর্তন
+                                            inputProps={{ min: 0, max: 100, step: 0.1 }}
+                                            helperText="০ থেকে ১০০ পার্সেন্ট"
+                                        />
+                                    </Grid>
+
+                                    {/* Final Price */}
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            fullWidth
+                                            label="চূড়ান্ত দাম (৳)"
+                                            type="number"
+                                            value={finalPrice.toFixed(2)}
+                                            disabled
+                                            helperText="স্বয়ংক্রিয়ভাবে গণনা করা"
+                                        />
+                                    </Grid>
+
+                                    {/* Price Breakdown */}
+                                    {selectedMeal && (
+                                        <Grid item xs={12}>
+                                            <Card elevation={3} className="price-breakdown">
+                                                <CardContent>
+                                                    <Box display="flex" alignItems="center" gap={1} mb={2}>
+                                                        <span className="material-icons" style={{ color: '#1976d2' }}>
+                                                            receipt_long
+                                                        </span>
+                                                        <Typography variant="h6" color="primary">
+                                                            মূল্য বিবরণ
+                                                        </Typography>
+                                                    </Box>
+
+                                                    <Grid container spacing={2}>
+                                                        <Grid item xs={12} sm={6}>
+                                                            <Box p={2} bgcolor="white" borderRadius={2} boxShadow={1}>
+                                                                <Typography variant="subtitle1" style={{ fontWeight: 'bold' }} gutterBottom>
+                                                                    🍽️ {selectedMeal.name}
+                                                                </Typography>
+                                                                <Typography variant="body2" color="textSecondary">
+                                                                    মূল দাম: ৳{originalPrice.toFixed(2)}
+                                                                </Typography>
+                                                                {formData.discount > 0 && (
+                                                                    <Typography variant="body2" style={{ color: '#f44336' }}>
+                                                                        ছাড় ({formData.discount}%): -৳{discountAmount.toFixed(2)}
+                                                                    </Typography>
+                                                                )}
+                                                            </Box>
+                                                        </Grid>
+
+                                                        <Grid item xs={12} sm={6}>
+                                                            <Box p={2} bgcolor="#e8f5e8" borderRadius={2} boxShadow={1}>
+                                                                <Typography variant="h6" style={{ fontWeight: 'bold', color: '#2e7d32' }}>
+                                                                    💰 চূড়ান্ত দাম: ৳{finalPrice.toFixed(2)}
+                                                                </Typography>
+                                                                {formData.discount > 0 && (
+                                                                    <Typography variant="body2" style={{ color: '#2e7d32' }}>
+                                                                        আপনি ৳{discountAmount.toFixed(2)} সাশ্রয় করেছেন!
+                                                                    </Typography>
+                                                                )}
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                            </DialogContent>
+
+                            <DialogActions style={{ padding: '16px 24px' }}>
+                                <Button
+                                    onClick={handleClose}
+                                    color="secondary"
+                                    startIcon={<span className="material-icons">cancel</span>}
+                                >
+                                    বাতিল
+                                </Button>
+                                <Button
+                                    onClick={handleSubmit}
+                                    color="primary"
+                                    variant="contained"
+                                    disabled={!isFormValid}
+                                    startIcon={<span className="material-icons">check_circle</span>}
+                                >
+                                    এসাইন করুন
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </div>
+                </ThemeProvider>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<AssignModal />);
+    </script>
+</body>
+
+</html>

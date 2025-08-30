@@ -1,0 +1,975 @@
+// 1. teacher type
+// import type { BaseEntity } from '~/shared/types/common';
+// import type { Address } from '~/features/core/types/geography';
+
+export interface BaseEntity {
+  id: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+export interface Address {
+  nationalityId?: string;
+  divisionId?: string;
+  districtId?: string;
+  subDistrictId?: string;
+  postOfficeId?: string;
+  villageId?: string;
+}
+
+type Status = 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'ARCHIVE'
+
+/**
+ * Educational Qualification interface
+ */
+export interface EducationalQualification {
+  id: string;
+  degreeName: string;
+  institution: string;
+  year: string;
+  grade: string;
+  documentUrl?: string;
+}
+
+/**
+ * Professional Experience interface
+ */
+export interface ProfessionalExperience {
+  id: string;
+  companyName: string;
+  jobTitle: string;
+  startDate: string;
+  endDate?: string;
+  responsibilities: string;
+  achievements?: string;
+}
+
+/**
+ * Reference interface
+ */
+export interface Reference {
+  id: string;
+  name: string;
+  relationship: string;
+  contactNumber: string;
+  email?: string;
+  recommendationLetterUrl?: string;
+}
+
+
+
+
+/**
+ * Teacher entity interface
+ */
+export interface Teacher extends BaseEntity {
+  // Personal Information
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  placeOfBirth?: string;
+  fatherName: string; //change
+  motherName?: string;
+  mobileNumber: string;
+  emailAddress: string;
+  emergencyContact?: string;
+  // nationalId: string; //change
+  photoUrl?: string;
+  
+  // Demographics
+  genderId: string;
+  bloodGroupId?: string;
+  nationalityId: string; //change
+  maritalStatusId: string; //change
+  // relationId?: string; // change
+  
+  // Address Information
+  presentAddress: Address; // change
+  permanentAddress: Address; // change
+  sameAsPresent?: boolean;
+  
+  // Educational Qualifications
+  educationalQualifications: EducationalQualification[];
+  
+  // Professional Experience
+  professionalExperience?: ProfessionalExperience[]; // change
+  
+  // References & Testimonials
+  references?: Reference[]; // change
+  
+  // Employment Details
+  salaryExpectation?: number;
+  joiningDate?: string;
+  digitalSignatureUrl?: string;
+  yearsOfExperience?: number;
+  noticePeriod?: string;
+  designationIds: string[]; // change
+  
+  // Teaching Specialization
+  subjectIds: string[];
+  gradeLevelIds: string[];
+  languageProficiencyIds: string[];
+  
+  // Skills & Competencies
+  computerSkills?: string;
+  teachingMethodology?: string;
+  onlineProfiles?: {
+    linkedin?: string;
+    personalWebsite?: string;
+  };
+  
+  // Additional Information
+  details?: string;
+  status: Status; // change
+}
+
+
+/**
+ * Create Teacher DTO
+ */
+export interface CreateTeacherDto {
+  // Personal Information
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  placeOfBirth?: string;
+  fatherName?: string;
+  motherName?: string;
+  mobileNumber: string;
+  emailAddress: string;
+  emergencyContact?: string;
+  // nationalId?: string; // change
+  photoUrl?: string;
+  
+  // Demographics
+  genderId: string;
+  bloodGroupId?: string;
+  nationalityId: string; // change
+  maritalStatusId?: string;
+  // relationId?: string; // change
+  
+  // Address Information
+  presentAddress: Address; // change
+  permanentAddress: Address; // change
+  sameAsPresent?: boolean;
+  
+  // Educational Qualifications
+  educationalQualifications: Omit<EducationalQualification, 'id'>[];
+  
+  // Professional Experience
+  professionalExperience?: Omit<ProfessionalExperience, 'id'>[]; // change
+  
+  // References & Testimonials
+  references?: Omit<Reference, 'id'>[]; // change
+  
+  // Employment Details
+  salaryExpectation?: number;
+  joiningDate?: string;
+  digitalSignatureUrl?: string;
+  yearsOfExperience?: number;
+  noticePeriod?: string;
+  designationIds: string[];  // change
+  
+  // Teaching Specialization
+  subjectIds: string[];
+  gradeLevelIds: string[];
+  languageProficiencyIds: string[];
+  
+  // Skills & Competencies
+  computerSkills?: string;
+  teachingMethodology?: string;
+  onlineProfiles?: {
+    linkedin?: string;
+    personalWebsite?: string;
+  };
+  
+  // Additional Information
+  details?: string;
+  status: Status; // change
+}
+
+/**
+ * Update Teacher DTO
+ */
+export interface UpdateTeacherDto {
+  // Personal Information
+  firstName?: string;
+  lastName?: string;
+  // age?: number;
+  dateOfBirth?: string;
+  placeOfBirth?: string;
+  fatherName?: string;
+  motherName?: string;
+  mobileNumber?: string;
+  emailAddress?: string;
+  emergencyContact?: string;
+  // nationalId?: string; // change
+  photoUrl?: string;
+  
+  // Demographics
+  genderId?: string;
+  bloodGroupId?: string;
+  nationalityId?: string;
+  maritalStatusId?: string;
+  relationId?: string;
+  
+  // Address Information
+  presentAddress?: Address;
+  permanentAddress?: Address;
+  sameAsPresent?: boolean;
+  
+  // Educational Qualifications
+  educationalQualifications?: EducationalQualification[];
+  
+  // Professional Experience
+  professionalExperience?: ProfessionalExperience[];
+  
+  // References & Testimonials
+  references?: Reference[];
+  
+  // Employment Details
+  salaryExpectation?: number;
+  joiningDate?: string;
+  digitalSignatureUrl?: string;
+  yearsOfExperience?: number;
+  noticePeriod?: string;
+  designationIds?: string[]; // Add designationId here
+  
+  // Teaching Specialization
+  subjectIds?: string[];
+  gradeLevelIds?: string[];
+  languageProficiencyIds?: string[];
+  
+  // Skills & Competencies
+  computerSkills?: string;
+  teachingMethodology?: string;
+  onlineProfiles?: {
+    linkedin?: string;
+    personalWebsite?: string;
+  };
+  
+  // Additional Information
+  details?: string;
+  status?: Status; // change
+}
+
+/**
+ * Teacher filters interface
+ */
+export interface TeacherFilters {
+  search?: string;
+  status?: string;
+  genderId?: string;
+  subjectId?: string;
+  gradeLevelId?: string;
+  designationIds?: string[]; // Add designationId here
+}
+
+/**
+ * Teacher with populated details
+ */
+export interface TeacherDetail extends Teacher {
+  gender?: { id: string; name: string };
+  bloodGroup?: { id: string; name: string };
+  nationality?: { id: string; name: string };
+  maritalStatus?: { id: string; name: string };
+  relation?: { id: string; name: string };
+  subjects?: { id: string; name: string }[];
+  gradeLevels?: { id: string; name: string }[];
+  languageProficiencies?: { id: string; name: string }[];
+  designations?: { id: string; name: string }[]; // Add designation here
+}
+
+// 2. teacherApi
+// import type { BaseEntity } from '~/shared/types/common';
+// import type { Address } from '~/features/core/types/geography';
+
+export interface BaseEntity {
+  id: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+export interface Address {
+  nationalityId?: string;
+  divisionId?: string;
+  districtId?: string;
+  subDistrictId?: string;
+  postOfficeId?: string;
+  villageId?: string;
+}
+
+type Status = 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'ARCHIVE'
+
+/**
+ * Educational Qualification interface
+ */
+export interface EducationalQualification {
+  id: string;
+  degreeName: string;
+  institution: string;
+  year: string;
+  grade: string;
+  documentUrl?: string;
+}
+
+/**
+ * Professional Experience interface
+ */
+export interface ProfessionalExperience {
+  id: string;
+  companyName: string;
+  jobTitle: string;
+  startDate: string;
+  endDate?: string;
+  responsibilities: string;
+  achievements?: string;
+}
+
+/**
+ * Reference interface
+ */
+export interface Reference {
+  id: string;
+  name: string;
+  relationship: string;
+  contactNumber: string;
+  email?: string;
+  recommendationLetterUrl?: string;
+}
+
+
+
+
+/**
+ * Teacher entity interface
+ */
+export interface Teacher extends BaseEntity {
+  // Personal Information
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  placeOfBirth?: string;
+  fatherName: string; //change
+  motherName?: string;
+  mobileNumber: string;
+  emailAddress: string;
+  emergencyContact?: string;
+  // nationalId: string; //change
+  photoUrl?: string;
+  
+  // Demographics
+  genderId: string;
+  bloodGroupId?: string;
+  nationalityId: string; //change
+  maritalStatusId: string; //change
+  // relationId?: string; // change
+  
+  // Address Information
+  presentAddress: Address; // change
+  permanentAddress: Address; // change
+  sameAsPresent?: boolean;
+  
+  // Educational Qualifications
+  educationalQualifications: EducationalQualification[];
+  
+  // Professional Experience
+  professionalExperience?: ProfessionalExperience[]; // change
+  
+  // References & Testimonials
+  references?: Reference[]; // change
+  
+  // Employment Details
+  salaryExpectation?: number;
+  joiningDate?: string;
+  digitalSignatureUrl?: string;
+  yearsOfExperience?: number;
+  noticePeriod?: string;
+  designationIds: string[]; // change
+  
+  // Teaching Specialization
+  subjectIds: string[];
+  gradeLevelIds: string[];
+  languageProficiencyIds: string[];
+  
+  // Skills & Competencies
+  computerSkills?: string;
+  teachingMethodology?: string;
+  onlineProfiles?: {
+    linkedin?: string;
+    personalWebsite?: string;
+  };
+  
+  // Additional Information
+  details?: string;
+  status: Status; // change
+}
+
+
+/**
+ * Create Teacher DTO
+ */
+export interface CreateTeacherDto {
+  // Personal Information
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  placeOfBirth?: string;
+  fatherName?: string;
+  motherName?: string;
+  mobileNumber: string;
+  emailAddress: string;
+  emergencyContact?: string;
+  // nationalId?: string; // change
+  photoUrl?: string;
+  
+  // Demographics
+  genderId: string;
+  bloodGroupId?: string;
+  nationalityId: string; // change
+  maritalStatusId?: string;
+  // relationId?: string; // change
+  
+  // Address Information
+  presentAddress: Address; // change
+  permanentAddress: Address; // change
+  sameAsPresent?: boolean;
+  
+  // Educational Qualifications
+  educationalQualifications: Omit<EducationalQualification, 'id'>[];
+  
+  // Professional Experience
+  professionalExperience?: Omit<ProfessionalExperience, 'id'>[]; // change
+  
+  // References & Testimonials
+  references?: Omit<Reference, 'id'>[]; // change
+  
+  // Employment Details
+  salaryExpectation?: number;
+  joiningDate?: string;
+  digitalSignatureUrl?: string;
+  yearsOfExperience?: number;
+  noticePeriod?: string;
+  designationIds: string[];  // change
+  
+  // Teaching Specialization
+  subjectIds: string[];
+  gradeLevelIds: string[];
+  languageProficiencyIds: string[];
+  
+  // Skills & Competencies
+  computerSkills?: string;
+  teachingMethodology?: string;
+  onlineProfiles?: {
+    linkedin?: string;
+    personalWebsite?: string;
+  };
+  
+  // Additional Information
+  details?: string;
+  status: Status; // change
+}
+
+/**
+ * Update Teacher DTO
+ */
+export interface UpdateTeacherDto {
+  // Personal Information
+  firstName?: string;
+  lastName?: string;
+  // age?: number;
+  dateOfBirth?: string;
+  placeOfBirth?: string;
+  fatherName?: string;
+  motherName?: string;
+  mobileNumber?: string;
+  emailAddress?: string;
+  emergencyContact?: string;
+  // nationalId?: string; // change
+  photoUrl?: string;
+  
+  // Demographics
+  genderId?: string;
+  bloodGroupId?: string;
+  nationalityId?: string;
+  maritalStatusId?: string;
+  relationId?: string;
+  
+  // Address Information
+  presentAddress?: Address;
+  permanentAddress?: Address;
+  sameAsPresent?: boolean;
+  
+  // Educational Qualifications
+  educationalQualifications?: EducationalQualification[];
+  
+  // Professional Experience
+  professionalExperience?: ProfessionalExperience[];
+  
+  // References & Testimonials
+  references?: Reference[];
+  
+  // Employment Details
+  salaryExpectation?: number;
+  joiningDate?: string;
+  digitalSignatureUrl?: string;
+  yearsOfExperience?: number;
+  noticePeriod?: string;
+  designationIds?: string[]; // Add designationId here
+  
+  // Teaching Specialization
+  subjectIds?: string[];
+  gradeLevelIds?: string[];
+  languageProficiencyIds?: string[];
+  
+  // Skills & Competencies
+  computerSkills?: string;
+  teachingMethodology?: string;
+  onlineProfiles?: {
+    linkedin?: string;
+    personalWebsite?: string;
+  };
+  
+  // Additional Information
+  details?: string;
+  status?: Status; // change
+}
+
+/**
+ * Teacher filters interface
+ */
+export interface TeacherFilters {
+  search?: string;
+  status?: string;
+  genderId?: string;
+  subjectId?: string;
+  gradeLevelId?: string;
+  designationIds?: string[]; // Add designationId here
+}
+
+/**
+ * Teacher with populated details
+ */
+export interface TeacherDetail extends Teacher {
+  gender?: { id: string; name: string };
+  bloodGroup?: { id: string; name: string };
+  nationality?: { id: string; name: string };
+  maritalStatus?: { id: string; name: string };
+  relation?: { id: string; name: string };
+  subjects?: { id: string; name: string }[];
+  gradeLevels?: { id: string; name: string }[];
+  languageProficiencies?: { id: string; name: string }[];
+  designations?: { id: string; name: string }[]; // Add designation here
+}
+
+// 3. teacherSlice
+import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import type {
+  Teacher,
+  CreateTeacherDto,
+  UpdateTeacherDto,
+  TeacherFilters,
+} from '../types/teacherType';
+import { teacherApi } from '../services/teacherApi';
+
+/**
+ * Teacher slice state interface
+ */
+export interface TeacherState {
+  // Data
+  teachers: Teacher[];
+  selectedTeacher: Teacher | null;
+
+  // UI State
+  loading: boolean;
+  error: string | null;
+  filters: TeacherFilters;
+
+  // Pagination
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+/**
+ * Initial state for teacher slice
+ */
+const initialState: TeacherState = {
+  teachers: [],
+  selectedTeacher: null,
+  loading: false,
+  error: null,
+  filters: {},
+  pagination: {
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+  },
+};
+
+// Async thunks for API operations
+
+/**
+ * Fetch teachers with pagination and filtering
+ */
+export const fetchTeachers = createAsyncThunk(
+  'teacher/fetchTeachers',
+  async (params: { page?: number; limit?: number; filters?: TeacherFilters } = {}) => {
+    return await teacherApi.getTeachers(params);
+  }
+);
+
+/**
+ * Fetch teacher by ID
+ */
+export const fetchTeacherById = createAsyncThunk(
+  'teacher/fetchTeacherById',
+  async (id: string) => {
+    return await teacherApi.getTeacherById(id);
+  }
+);
+
+/**
+ * Create new teacher
+ */
+export const createTeacher = createAsyncThunk(
+  'teacher/createTeacher',
+  async (data: CreateTeacherDto) => {
+    return await teacherApi.createTeacher(data);
+  }
+);
+
+/**
+ * Update teacher
+ */
+export const updateTeacher = createAsyncThunk(
+  'teacher/updateTeacher',
+  async ({ id, data }: { id: string; data: UpdateTeacherDto }) => {
+    return await teacherApi.updateTeacher(id, data);
+  }
+);
+
+/**
+ * Delete teacher
+ */
+export const deleteTeacher = createAsyncThunk(
+  'teacher/deleteTeacher',
+  async (id: string) => {
+    await teacherApi.deleteTeacher(id);
+    return id;
+  }
+);
+
+/**
+ * Teacher slice definition
+ */
+const teacherSlice = createSlice({
+  name: 'teacher',
+  initialState,
+  reducers: {
+    setFilters: (state, action: PayloadAction<TeacherFilters>) => {
+      state.filters = action.payload;
+      state.pagination.page = 1; // Reset pagination when filtering
+    },
+    clearFilters: (state) => {
+      state.filters = {};
+      state.pagination.page = 1;
+    },
+    setPagination: (state, action: PayloadAction<Partial<typeof initialState.pagination>>) => {
+      state.pagination = { ...state.pagination, ...action.payload };
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
+    clearSelectedTeacher: (state) => {
+      state.selectedTeacher = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Fetch teachers
+      .addCase(fetchTeachers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTeachers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.teachers = action.payload.data;
+        state.pagination = {
+          page: action.payload.page,
+          limit: action.payload.limit,
+          total: action.payload.total,
+          totalPages: action.payload.totalPages,
+        };
+      })
+      .addCase(fetchTeachers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch teachers';
+      })
+
+      // Fetch teacher by ID
+      .addCase(fetchTeacherById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTeacherById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedTeacher = action.payload;
+      })
+      .addCase(fetchTeacherById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch teacher';
+      })
+
+      // Create teacher
+      .addCase(createTeacher.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      // Create teacher - professionalExperience/references অপশনাল হ্যান্ডলিং
+      .addCase(createTeacher.fulfilled, (state, action) => {
+        state.loading = false;
+
+        // নেস্টেড অবজেক্ট যোগ করা
+        const newTeacher = {
+          ...action.payload,
+          professionalExperience: action.payload.professionalExperience || [],
+          references: action.payload.references || [],
+        };
+
+        state.teachers.unshift(newTeacher);
+        state.pagination.total += 1;
+      })
+      .addCase(createTeacher.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to create teacher';
+      })
+
+      // Update teacher
+      .addCase(updateTeacher.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateTeacher.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.teachers.findIndex(teacher => teacher.id === action.payload.id);
+        if (index !== -1) {
+          state.teachers[index] = action.payload;
+        }
+        if (state.selectedTeacher?.id === action.payload.id) {
+          state.selectedTeacher = action.payload;
+        }
+      })
+      .addCase(updateTeacher.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to update teacher';
+      })
+
+      // Delete teacher
+      .addCase(deleteTeacher.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteTeacher.fulfilled, (state, action) => {
+        state.loading = false;
+        state.teachers = state.teachers.filter(teacher => teacher.id !== action.payload);
+        state.pagination.total = Math.max(0, state.pagination.total - 1);
+        if (state.selectedTeacher?.id === action.payload) {
+          state.selectedTeacher = null;
+        }
+      })
+      .addCase(deleteTeacher.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to delete teacher';
+      });
+  },
+});
+
+// Export actions
+export const {
+  setFilters,
+  clearFilters,
+  setPagination,
+  clearError,
+  clearSelectedTeacher,
+} = teacherSlice.actions;
+
+// Export selectors
+export const selectTeacherState = (state: { teacher: TeacherState }) => state.teacher;
+export const selectTeachers = (state: { teacher: TeacherState }) => state.teacher.teachers;
+export const selectSelectedTeacher = (state: { teacher: TeacherState }) => state.teacher.selectedTeacher;
+export const selectTeacherLoading = (state: { teacher: TeacherState }) => state.teacher.loading;
+export const selectTeacherError = (state: { teacher: TeacherState }) => state.teacher.error;
+export const selectTeacherFilters = (state: { teacher: TeacherState }) => state.teacher.filters;
+export const selectTeacherPagination = (state: { teacher: TeacherState }) => state.teacher.pagination;
+
+// Export reducer
+export default teacherSlice.reducer;
+
+// 4. teacher schema
+
+import { z } from 'zod';
+
+/**
+ * Educational Qualification validation schema
+ */
+const educationalQualificationSchema = z.object({
+  degreeName: z.string()
+    .min(1, 'Degree name is required')
+    .max(200, 'Degree name must be less than 200 characters'),
+  institution: z.string()
+    .min(1, 'Institution is required')
+    .max(200, 'Institution must be less than 200 characters'),
+  year: z.string()
+    .min(1, 'Year is required')
+    .regex(/^\d{4}$/, 'Year must be a valid 4-digit year'),
+  grade: z.string()
+    .min(1, 'Grade is required')
+    .max(50, 'Grade must be less than 50 characters'),
+  documentUrl: z.string().optional(),
+});
+
+/**
+ * Professional Experience validation schema
+ */
+const professionalExperienceSchema = z.object({
+  companyName: z.string()
+    .min(1, 'Company name is required')
+    .max(200, 'Company name must be less than 200 characters'),
+  jobTitle: z.string()
+    .min(1, 'Job title is required')
+    .max(100, 'Job title must be less than 100 characters'),
+  startDate: z.string()
+    .min(1, 'Start date is required')
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: 'Invalid start date format',
+    }),
+  endDate: z.string()
+    .optional()
+    .refine((date) => !date || !isNaN(Date.parse(date)), {
+      message: 'Invalid end date format',
+    }),
+  responsibilities: z.string()
+    .min(1, 'Responsibilities are required')
+    .max(1000, 'Responsibilities must be less than 1000 characters'),
+  achievements: z.string()
+    .max(1000, 'Achievements must be less than 1000 characters')
+    .optional(),
+});
+
+/**
+ * Reference validation schema
+ */
+const referenceSchema = z.object({
+  name: z.string()
+    .min(1, 'Name is required')
+    .max(100, 'Name must be less than 100 characters'),
+  relationship: z.string()
+    .min(1, 'Relationship is required')
+    .max(100, 'Relationship must be less than 100 characters'),
+  contactNumber: z.string()
+    .min(1, 'Contact number is required')
+    .regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid contact number format'),
+  email: z.string()
+    .email('Invalid email format')
+    .optional()
+    .or(z.literal('')),
+  recommendationLetterUrl: z.string().optional(),
+});
+
+/**
+ * Address validation schema
+ */
+const addressSchema = z.object({
+  nationalityId: z.string().optional(),
+  divisionId: z.string().optional(),
+  districtId: z.string().optional(),
+  subDistrictId: z.string().optional(),
+  postOfficeId: z.string().optional(),
+  villageId: z.string().optional(),
+});
+
+/**
+ * Online Profiles validation schema
+ */
+const onlineProfilesSchema = z.object({
+  linkedin: z.string()
+    .url('Invalid LinkedIn URL')
+    .optional()
+    .or(z.literal('')),
+  personalWebsite: z.string()
+    .url('Invalid website URL')
+    .optional()
+    .or(z.literal('')),
+});
+
+/**
+ * Main Teacher validation schema
+ */
+export const teacherSchema = z.object({
+  // Personal Information
+  firstName: z.string()
+    .min(1, 'First name is required')
+    .max(50, 'First name must be less than 50 characters')
+    .trim(),
+  lastName: z.string()
+    .min(1, 'Last name is required')
+    .max(50, 'Last name must be less than 50 characters')
+    .trim(),
+  dateOfBirth: z.string()
+    .min(1, 'Date of birth is required')
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: 'Invalid date of birth format',
+    }),
+  placeOfBirth: z.string()
+    .max(100, 'Place of birth must be less than 100 characters')
+    .optional(),
+  // ব্যক্তিগত তথ্য
+  fatherName: z.string() // অপশনাল → রিকোয়ার্ড
+    .min(1, 'Father name is required')
+    .max(100, 'Father name must be less than 100 characters'),
+
+  // জনতাত্ত্বিক তথ্য
+  nationalityId: z.string() // অপশনাল → রিকোয়ার্ড
+    .min(1, 'Nationality is required'),
+
+  maritalStatusId: z.string() // অপশনাল → রিকোয়ার্ড
+    .min(1, 'Marital status is required'),
+
+  // অপসারণ: nationalId, relationId
+
+  // ঠিকানা
+  presentAddress: addressSchema, // অপশনাল → রিকোয়ার্ড
+  permanentAddress: addressSchema, // অপশনাল → রিকোয়ার্ড
+
+  // পেশাগত অভিজ্ঞতা (রিকোয়ার্ড → অপশনাল)
+  professionalExperience: z.array(professionalExperienceSchema).optional(),
+
+  // রেফারেন্স (রিকোয়ার্ড → অপশনাল)
+  references: z.array(referenceSchema).optional(),
+
+  // চাকুরির বিবরণ
+  designationIds: z.array(z.string()) // অপশনাল → রিকোয়ার্ড
+    .min(1, 'At least one designation is required'),
+
+  // স্ট্যাটাস আপডেট
+  status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING', 'ARCHIVE'], {
+    required_error: 'Status is required',
+  }),
+}).refine((data) => {
+  // If end date is provided, it should be after start date for each experience
+  return !data.professionalExperience || data.professionalExperience.every(exp => {
+    if (!exp.endDate) return true;
+    return new Date(exp.startDate) < new Date(exp.endDate);
+  });
+}, {
+  message: 'End date must be after start date',
+  path: ['professionalExperience'],
+});
+
+export type TeacherFormData = z.infer<typeof teacherSchema>;
+
+// 
+code গুলো বুঝো এবং দেখো সব ঠিক আছে কিনা। যদি এই ৪টা ফাইলের আপাতত কোন এরর নেই। এরপর আমি তোমাকে UI এর কোড দিবো।
